@@ -7,7 +7,6 @@ updater = Updater(token='178314829:AAGcHaT7n_q3USrSIcq8YX_eVrizfyLs64Y')
 
 dispatcher = updater.dispatcher
 
-# add new methods here
 def echo(bot, chat_id, text):
   bot.sendMessage(chat_id=chat_id, text=text)
 
@@ -31,8 +30,6 @@ def img(bot, chat_id, text):
 triggers = {}
 
 def trigger(bot, chat_id, text):
-  global triggers
-
   best_trigger = ''
   for trig in triggers.keys():
     if trig in text and len(trig) > len(best_trigger):
@@ -54,6 +51,18 @@ def show_triggers(bot, chat_id):
   text = "trigger warnings: %s" % (", ".join(triggers.keys()))
   bot.sendMessage(chat_id=chat_id, text=text) 
 
+def magic8ball(bot, chat_id):
+  replies = ['Signs point to yes',
+          'Without a doubt',
+          'You may rely on it',
+          'Do not count on it',
+          'Looking good',
+          'Cannot predict now',
+          'It is decidedly so',
+          'Outlook not so good']
+
+  bot.sendMessage(chat_id=chat_id, text=replies[int(random() * len(replies))])
+  
 # all messages to the bot come here for processing
 def main(bot, update):
   message_text = update.message.text
@@ -71,6 +80,8 @@ def main(bot, update):
     caps(bot, chat_id, text)
   elif cmd == '!google':
     google(bot, chat_id, text)
+  elif cmd == '!magic8ball':
+    magic8ball(bot, chat_id)
   elif "==?" == message_text:
     show_triggers(bot, chat_id)
   elif "==>" in message_text:
