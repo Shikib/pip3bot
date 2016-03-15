@@ -2,6 +2,7 @@ from telegram import Updater
 from googlesearch import GoogleSearch
 from googleapiclient.discovery import build
 from random import random
+from PyDictionary import PyDictionary
 
 updater = Updater(token='178314829:AAGcHaT7n_q3USrSIcq8YX_eVrizfyLs64Y')
 
@@ -62,6 +63,16 @@ def magic8ball(bot, chat_id):
           'Outlook not so good']
 
   bot.sendMessage(chat_id=chat_id, text=replies[int(random() * len(replies))])
+
+dictionary = PyDictionary()
+def define(bot, chat_id, text):
+  meaning = dictionary.meaning(text) 
+  definition_string = ""
+  for key in meaning.keys():
+    definition_string += key + ":" + "\n\r"
+    definition_string += "\n\r".join(["- " + value for value in meaning[key]])
+    definition_string += "\n\r"
+  bot.sendMessage(chat_id=chat_id, text=definition_string)
   
 # all messages to the bot come here for processing
 def main(bot, update):
@@ -82,6 +93,8 @@ def main(bot, update):
     google(bot, chat_id, text)
   elif cmd == '!magic8ball':
     magic8ball(bot, chat_id)
+  elif cmd == '!define':
+    define(bot, chat_id, text)
   elif "==?" == message_text:
     show_triggers(bot, chat_id)
   elif "==>" in message_text:
