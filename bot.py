@@ -72,6 +72,10 @@ def define(bot, chat_id, text):
     definition_string += key + ":" + "\n\r"
     definition_string += "\n\r".join(["- " + value for value in meaning[key]])
     definition_string += "\n\r"
+
+  if not definition_string:
+    definition_string = "Sorry. No definition found. :("
+
   bot.sendMessage(chat_id=chat_id, text=definition_string)
   
 # all messages to the bot come here for processing
