@@ -3,6 +3,8 @@ from googlesearch import GoogleSearch
 from googleapiclient.discovery import build
 from random import random
 from PyDictionary import PyDictionary
+import urllib
+import json
 
 updater = Updater(token='178314829:AAGcHaT7n_q3USrSIcq8YX_eVrizfyLs64Y')
 
@@ -78,6 +80,21 @@ def define(bot, chat_id, text):
 
   bot.sendMessage(chat_id=chat_id, text=definition_string)
   
+def urban_define(bot, chat_id, text):
+  url = "http://api.urbandictionary.com/v0/define?term=%s" % text
+  response = urllib.urlopen(url)
+  data = json.loads(response.read())
+  print(data)
+
+  definition_string = ""
+
+  if len(data['list']):
+    definition_string = data['list'][int(random()*len(data['list']))]['definition']
+  else: 
+    definition_string = "Sorry. No definition found. :("
+
+  bot.sendMessage(chat_id=chat_id, text=definition_string)
+
 # all messages to the bot come here for processing
 def main(bot, update):
   message_text = update.message.text
@@ -99,6 +116,8 @@ def main(bot, update):
     magic8ball(bot, chat_id)
   elif cmd == '!define':
     define(bot, chat_id, text)
+  elif cmd == '!ud':
+    urban_define(bot, chat_id, text)
   elif "==?" == message_text:
     show_triggers(bot, chat_id)
   elif "==>" in message_text:
