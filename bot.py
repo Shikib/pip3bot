@@ -98,6 +98,7 @@ def urban_define(bot, chat_id, text):
 def eval_message(bot, chat_id, text):
   if "eval" in text or "import" in text or len(text) > 128:
     bot.sendMessage(chat_id=chat_id, text=": ^ )")
+    return None
 
   try:
     bot.sendMessage(chat_id=chat_id, text=str(eval(text)))
