@@ -95,6 +95,16 @@ def urban_define(bot, chat_id, text):
 
   bot.sendMessage(chat_id=chat_id, text=definition_string)
 
+def eval_message(bot, chat_id, text):
+  if "import" in text or len(text) > 128:
+    bot.sendMessage(chat_id=chat_id, text=": ^ )")
+
+  try:
+    bot.sendMessage(chat_id=chat_id, text=str(eval(text)))
+  except Exception as e:
+    bot.sendMessage(chat_id=chat_id, text=e.message)
+    
+
 # all messages to the bot come here for processing
 def main(bot, update):
   message_text = update.message.text
@@ -118,6 +128,8 @@ def main(bot, update):
     define(bot, chat_id, text)
   elif cmd == '!ud':
     urban_define(bot, chat_id, text)
+  elif cmd == '!eval':
+    eval_message(bot, chat_id, text)
   elif "==?" == message_text:
     show_triggers(bot, chat_id)
   elif "==>" in message_text:
