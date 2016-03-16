@@ -45,7 +45,9 @@ def set_trigger(text):
   global triggers
   key, val = [strng.strip() for strng in text.split("==>")]
 
-  if len(key) > 1 and len(val) > 1:
+  if (val == "nil" or val == "null" or val == "none") and key in triggers:
+    del triggers[key]
+  elif len(key) > 1 and len(val) > 1:
     triggers[key] = val 
 
 def show_triggers(bot, chat_id):
@@ -114,6 +116,7 @@ def main(bot, update):
   words = message_text.split()
   cmd = words[0]
   text = ' '.join(words[1:]) if len(words) > 1 else ''
+  text = text.lower()
 
   if cmd == '!img':
     img(bot, chat_id, text)
