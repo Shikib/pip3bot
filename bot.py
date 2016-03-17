@@ -5,6 +5,7 @@ from random import random
 from PyDictionary import PyDictionary
 import urllib
 import json
+import wikipedia
 
 updater = Updater(token='178314829:AAGcHaT7n_q3USrSIcq8YX_eVrizfyLs64Y')
 
@@ -105,8 +106,27 @@ def eval_message(bot, chat_id, text):
   try:
     bot.sendMessage(chat_id=chat_id, text=str(eval(text)))
   except Exception as e:
-    bot.sendMessage(chat_id=chat_id, text=e.message)
-    
+    bot.sendMessage(chat_id=chat_id, text=str(e))
+
+wikicache = {}
+def wiki(bot, chat_id, text):
+  if text in wikicache:
+    bot.sendMessage(chat_id=chat_id, text=wikicache[text])
+    return 
+
+  try:
+    summary = wikipedia.summary(text)
+  except Exception as e:
+    summary = ""
+  
+  if not summary:
+    summary = "Sorrt. No page found :("
+  else:
+    summary = summary[:summary.index("\n")]
+
+  wikicache[text] = summary
+
+  bot.sendMessage(chat_id=chat_id, text=summary)
 
 # all messages to the bot come here for processing
 def main(bot, update):
@@ -132,6 +152,8 @@ def main(bot, update):
     define(bot, chat_id, text)
   elif cmd == '!ud':
     urban_define(bot, chat_id, text)
+  elif cmd == '!wiki':
+    wiki(bot, chat_id, text)
   elif cmd == '!eval':
     eval_message(bot, chat_id, text)
   elif "==?" == message_text:
